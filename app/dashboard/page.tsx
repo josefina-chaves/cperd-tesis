@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { jsPDF } from "jspdf";
 import { motion } from "framer-motion";
 
+const API_URL = "https://cperd-backend.onrender.com";
+
 const COLORES_PIE = ["#566bf6", "#f97316", "#14b8a6", "#a855f7", "#ec4899"];
 
 const preguntas = [
@@ -45,7 +47,7 @@ const preguntas = [
   { id: "c32", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 5: Esfuerzo requerido.", titulo: "El tema en sí era difícil, más allá de cómo estuviera explicado." },
   { id: "c33", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 5: Esfuerzo requerido.", titulo: "El contenido tenía muchos elementos que había que relacionar." },
   { id: "c34", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 5: Esfuerzo requerido.", titulo: "El contenido requería conocimientos previos que todavía no dominaba." },
-  { id: "c35", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 5: Esfuerzo requerido.", titulo: "El material estava desordenado o mal organizado." },
+  { id: "c35", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 5: Esfuerzo requerido.", titulo: "El material estaba desordenado o mal organizado." },
   { id: "c36", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 5: Esfuerzo requerido.", titulo: "Las explicaciones eran confusas o difíciles de seguir." },
   { id: "c37", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 5: Esfuerzo requerido.", titulo: "Perdí tiempo tratando de entender cómo estaba armado el material." },
   { id: "c38", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 5: Esfuerzo requerido.", titulo: "El estudio de ese material mejoró efectivamente mi comprensión." },
@@ -71,8 +73,8 @@ export default function Dashboard() {
     const timestamp = new Date().getTime();
     
     Promise.all([
-      fetch(`http://127.0.0.1:8000/api/dashboard-stats?t=${timestamp}`, { cache: "no-store" }).then(res => res.json()),
-      fetch(`http://127.0.0.1:8000/api/respuestas/lista?t=${timestamp}`, { cache: "no-store" }).then(res => res.json())
+      fetch(`${API_URL}/api/dashboard-stats?t=${timestamp}`, { cache: "no-store" }).then(res => res.json()),
+      fetch(`${API_URL}/api/respuestas/lista?t=${timestamp}`, { cache: "no-store" }).then(res => res.json())
     ])
     .then(([statsData, listaData]) => {
       setMetricas(statsData);
@@ -117,7 +119,6 @@ export default function Dashboard() {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(100, 116, 139);
-    // SOLO FECHA DE EMISIÓN DEBAJO
     doc.text(`Fecha de emisión: ${encuesta.fecha}`, margenIzq, y);
     
     y += 8;
