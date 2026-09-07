@@ -228,7 +228,7 @@ export default function Home() {
   };
 
   const copiarEnlace = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText("https://cperd-tesis.vercel.app/");
     setLinkCopiado(true);
     setTimeout(() => setLinkCopiado(false), 2000);
   };
@@ -437,6 +437,72 @@ export default function Home() {
             </>
           )}
         </motion.div>
+
+        <button
+          onClick={() => {
+            setInputPassword("");
+            setErrorPassword(false);
+            setMostrarModalAdmin(true);
+          }}
+          className="fixed bottom-6 right-6 w-12 h-12 bg-gray-900 text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-gray-800 transition-all z-50 opacity-30 hover:opacity-100 focus:outline-none"
+          title="Panel de Control (Solo Admin)"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+
+        {mostrarModalAdmin && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl border border-gray-100">
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Acceso Restringido</h3>
+              <p className="text-sm text-gray-500 mb-6">Ingrese la contraseña de administrador:</p>
+              
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                if (inputPassword === "44321969") {
+                  setMostrarModalAdmin(false);
+                  router.push("/dashboard");
+                } else {
+                  setErrorPassword(true);
+                }
+              }}>
+                <input 
+                  type="password"
+                  autoFocus
+                  placeholder="••••••••"
+                  value={inputPassword}
+                  onChange={(e) => {
+                    setInputPassword(e.target.value);
+                    setErrorPassword(false);
+                  }}
+                  className={`w-full p-4 rounded-xl border-2 outline-none text-center text-lg tracking-widest font-bold mb-2 transition-all ${errorPassword ? "border-red-500 bg-red-50" : "border-gray-200 focus:border-[#566bf6]"}`}
+                />
+                
+                {errorPassword && (
+                  <p className="text-red-500 text-xs font-semibold mb-4 text-center">Contraseña incorrecta.</p>
+                )}
+
+                <div className="flex gap-3 mt-4">
+                  <button 
+                    type="button"
+                    onClick={() => setMostrarModalAdmin(false)}
+                    className="flex-1 py-3 rounded-xl font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    type="submit"
+                    className="flex-1 py-3 rounded-xl font-bold bg-[#566bf6] hover:bg-[#4255d6] text-white shadow-lg shadow-blue-500/30 transition-all"
+                  >
+                    Ingresar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </main>
     );
   }
