@@ -233,7 +233,6 @@ export default function Home() {
     setTimeout(() => setLinkCopiado(false), 2000);
   };
 
-  // ----- DESCARGAR PDF MEJORADO Y PROFESIONAL -----
   const descargarPDF = () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -290,7 +289,6 @@ export default function Home() {
         verificarEspacio(16);
         y += 4;
         
-        // Bloque de fondo para el título de la sección
         doc.setFillColor(241, 245, 249);
         doc.roundedRect(margenIzq, y, anchoMax, 8, 1, 1, "F");
         
@@ -298,7 +296,6 @@ export default function Home() {
         doc.setFontSize(9.5);
         doc.setTextColor(86, 107, 246);
         
-        // REEMPLAZO DE LA FLECHA PARA EVITAR CARACTERES RAROS EN EL PDF
         const tituloSeccionLimpio = seccionActual.replace(/→/g, "-").toUpperCase();
         doc.text(tituloSeccionLimpio, margenIzq + 4, y + 5.5, { align: "left" });
         y += 13;
@@ -365,6 +362,7 @@ export default function Home() {
   const puedeAvanzar = () => {
     if (pasoActual === 0) return aceptado;
     const p = preguntas[pasoActual - 1];
+    if (!p) return false;
     const res = respuestas[p.id];
 
     if (p.tipo === "text" || p.tipo === "autocomplete" || p.tipo === "textarea") return res?.trim().length > 0;
@@ -385,6 +383,8 @@ export default function Home() {
     centro: { x: 0, opacity: 1 },
     salir: (dir: number) => ({ x: dir > 0 ? -50 : 50, opacity: 0 })
   };
+
+  const pActual = (pasoActual > 0 && pasoActual <= preguntas.length) ? preguntas[pasoActual - 1] : null;
 
   // VISTA FINAL
   if (estadoFinal !== "pendiente") {
@@ -408,7 +408,6 @@ export default function Home() {
               <h2 className="text-3xl font-extrabold text-gray-800 mb-4 leading-tight">
                 ¡Muchas gracias por tomarte el tiempo de responder! 😊
               </h2>
-              {/* TEXTO CORREGIDO: SE AGREGÓ LA COMA */}
               <p className="text-gray-600 text-lg leading-relaxed mb-8">
                 Si conocés a alguien más que haya cursado con plataformas virtuales, compartile la encuesta, me ayuda un montón para mi tesis.
               </p>
@@ -528,29 +527,29 @@ export default function Home() {
               </motion.div>
             )}
 
-            {pasoActual > 0 && pasoActual <= preguntas.length && (
+            {pActual && (
               <motion.div key={`pregunta-${pasoActual}`} custom={direccion} initial="entrar" animate="centro" exit="salir" variants={variants} transition={{ duration: 0.3 }} className="p-10 md:p-12 flex flex-col h-full absolute inset-0">
                 
                 <div className="mb-6">
                   <span className="text-[#566bf6] font-bold text-sm tracking-wider uppercase block mb-3">
-                    {preguntas[pasoActual - 1].seccion}
+                    {pActual.seccion}
                   </span>
                   
-                  {preguntas[pasoActual - 1].descripcion ? (
+                  {pActual.descripcion ? (
                     <>
                       <h2 className="text-2xl font-bold text-gray-800 leading-snug mb-4">
-                        {preguntas[pasoActual - 1].descripcion}
+                        {pActual.descripcion}
                       </h2>
                       <div className="bg-[#f5f7ff] p-4 rounded-xl border border-[#e0e7ff]">
                         <p className="text-[#4255d6] text-[16px] font-semibold leading-relaxed">
-                          {preguntas[pasoActual - 1].titulo}
+                          {pActual.titulo}
                         </p>
                       </div>
                     </>
                   ) : (
                     <>
                       <h2 className="text-2xl font-bold text-gray-800 leading-snug">
-                        {preguntas[pasoActual - 1].titulo}
+                        {pActual.titulo}
                       </h2>
                     </>
                   )}
@@ -558,10 +557,10 @@ export default function Home() {
 
                 <div className="flex-1 space-y-3 overflow-y-auto pr-2 custom-scrollbar">
                   
-                  {preguntas[pasoActual - 1].tipo === "autocomplete" && (() => {
-                    const id = preguntas[pasoActual - 1].id;
+                  {pActual.tipo === "autocomplete" && (() => {
+                    const id = pActual.id;
                     const valorActual = respuestas[id] || "";
-                    const opcionesFiltradas = preguntas[pasoActual - 1].opciones?.filter((opcion) => 
+                    const opcionesFiltradas = pActual.opciones?.filter((opcion) => 
                       opcion.toLowerCase().includes(valorActual.toLowerCase())
                     ) || [];
                     
@@ -634,9 +633,9 @@ export default function Home() {
                     );
                   })()}
 
-                  {preguntas[pasoActual - 1].tipo === "escala" && (() => {
-                    const id = preguntas[pasoActual - 1].id;
-                    const opciones = preguntas[pasoActual - 1].opciones || [];
+                  {pActual.tipo === "escala" && (() => {
+                    const id = pActual.id;
+                    const opciones = pActual.opciones || [];
                     const valorActual = respuestas[id];
                     const indiceSeleccionado = valorActual ? opciones.indexOf(valorActual) : -1;
                     
@@ -674,27 +673,27 @@ export default function Home() {
                     );
                   })()}
 
-                  {preguntas[pasoActual - 1].tipo === "text" && (
+                  {pActual.tipo === "text" && (
                     <input 
                       type="text" 
                       placeholder="Escribí tu respuesta aquí..."
-                      value={respuestas[preguntas[pasoActual - 1].id] || ""}
-                      onChange={(e) => seleccionarOpcion(preguntas[pasoActual - 1].id, e.target.value)}
+                      value={respuestas[pActual.id] || ""}
+                      onChange={(e) => seleccionarOpcion(pActual.id, e.target.value)}
                       className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#566bf6] focus:ring-0 outline-none transition-all text-gray-700 font-medium"
                     />
                   )}
 
-                  {preguntas[pasoActual - 1].tipo === "textarea" && (
+                  {pActual.tipo === "textarea" && (
                     <textarea 
                       placeholder="Escribí tu respuesta aquí..."
-                      value={respuestas[pasoActual - 1].id] || ""}
-                      onChange={(e) => seleccionarOpcion(preguntas[pasoActual - 1].id, e.target.value)}
+                      value={respuestas[pActual.id] || ""}
+                      onChange={(e) => seleccionarOpcion(pActual.id, e.target.value)}
                       className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#566bf6] focus:ring-0 outline-none transition-all text-gray-700 font-medium resize-none h-32 custom-scrollbar"
                     />
                   )}
 
-                  {preguntas[pasoActual - 1].tipo === "radio" && preguntas[pasoActual - 1].opciones?.map((opcion, index) => {
-                    const id = preguntas[pasoActual - 1].id;
+                  {pActual.tipo === "radio" && pActual.opciones?.map((opcion, index) => {
+                    const id = pActual.id;
                     const estaSeleccionada = respuestas[id] === opcion;
                     return (
                       <div key={index} onClick={() => seleccionarOpcion(id, opcion)} className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-4 ${estaSeleccionada ? "border-[#566bf6] bg-[#f5f7ff]" : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"}`}>
@@ -706,8 +705,8 @@ export default function Home() {
                     );
                   })}
 
-                  {preguntas[pasoActual - 1].tipo === "checkbox" && preguntas[pasoActual - 1].opciones?.map((opcion, index) => {
-                    const id = preguntas[pasoActual - 1].id;
+                  {pActual.tipo === "checkbox" && pActual.opciones?.map((opcion, index) => {
+                    const id = pActual.id;
                     const seleccionados = respuestas[id] || [];
                     const estaSeleccionada = seleccionados.includes(opcion);
                     return (
@@ -720,23 +719,23 @@ export default function Home() {
                     );
                   })}
 
-                  {preguntas[pasoActual - 1].permiteOtra && (
+                  {pActual.permiteOtra && (
                     <div className="flex flex-col gap-2 mt-2">
-                      <div onClick={() => preguntas[pasoActual - 1].tipo === "radio" ? seleccionarOpcion(preguntas[pasoActual - 1].id, "Otra") : toggleCheckbox(preguntas[pasoActual - 1].id, "Otra")} className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-4 ${(preguntas[pasoActual - 1].tipo === "radio" ? respuestas[preguntas[pasoActual - 1].id] === "Otra" : (respuestas[preguntas[pasoActual - 1].id] || []).includes("Otra")) ? "border-[#566bf6] bg-[#f5f7ff]" : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"}`}>
-                        <div className={`w-5 h-5 flex items-center justify-center border-2 ${preguntas[pasoActual - 1].tipo === "radio" ? "rounded-full" : "rounded-[4px]"} ${(preguntas[pasoActual - 1].tipo === "radio" ? respuestas[preguntas[pasoActual - 1].id] === "Otra" : (respuestas[preguntas[pasoActual - 1].id] || []).includes("Otra")) ? (preguntas[pasoActual - 1].tipo === "radio" ? "border-[#566bf6]" : "bg-[#566bf6] border-[#566bf6]") : "border-gray-300"}`}>
-                          {preguntas[pasoActual - 1].tipo === "radio" && respuestas[preguntas[pasoActual - 1].id] === "Otra" && <div className="w-2.5 h-2.5 bg-[#566bf6] rounded-full"></div>}
-                          {preguntas[pasoActual - 1].tipo === "checkbox" && (respuestas[preguntas[pasoActual - 1].id] || []).includes("Otra") && <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
+                      <div onClick={() => pActual.tipo === "radio" ? seleccionarOpcion(pActual.id, "Otra") : toggleCheckbox(pActual.id, "Otra")} className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-4 ${(pActual.tipo === "radio" ? respuestas[pActual.id] === "Otra" : (respuestas[pActual.id] || []).includes("Otra")) ? "border-[#566bf6] bg-[#f5f7ff]" : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"}`}>
+                        <div className={`w-5 h-5 flex items-center justify-center border-2 ${pActual.tipo === "radio" ? "rounded-full" : "rounded-[4px]"} ${(pActual.tipo === "radio" ? respuestas[pActual.id] === "Otra" : (respuestas[pActual.id] || []).includes("Otra")) ? (pActual.tipo === "radio" ? "border-[#566bf6]" : "bg-[#566bf6] border-[#566bf6]") : "border-gray-300"}`}>
+                          {pActual.tipo === "radio" && respuestas[pActual.id] === "Otra" && <div className="w-2.5 h-2.5 bg-[#566bf6] rounded-full"></div>}
+                          {pActual.tipo === "checkbox" && (respuestas[pActual.id] || []).includes("Otra") && <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
                         </div>
-                        <span className={`font-medium ${(preguntas[pasoActual - 1].tipo === "radio" ? respuestas[preguntas[pasoActual - 1].id] === "Otra" : (respuestas[preguntas[pasoActual - 1].id] || []).includes("Otra")) ? "text-[#4255d6]" : "text-gray-700"}`}>Otra</span>
+                        <span className={`font-medium ${(pActual.tipo === "radio" ? respuestas[pActual.id] === "Otra" : (respuestas[pActual.id] || []).includes("Otra")) ? "text-[#4255d6]" : "text-gray-700"}`}>Otra</span>
                       </div>
                       
-                      {((preguntas[pasoActual - 1].tipo === "radio" && respuestas[preguntas[pasoActual - 1].id] === "Otra") || 
-                        (preguntas[pasoActual - 1].tipo === "checkbox" && (respuestas[preguntas[pasoActual - 1].id] || []).includes("Otra"))) && (
+                      {((pActual.tipo === "radio" && respuestas[pActual.id] === "Otra") || 
+                        (pActual.tipo === "checkbox" && (respuestas[pActual.id] || []).includes("Otra"))) && (
                         <input 
                           type="text" 
                           placeholder="Por favor, especificá..."
-                          value={valoresOtra[preguntas[pasoActual - 1].id] || ""}
-                          onChange={(e) => manejarTextoOtra(preguntas[pasoActual - 1].id, e.target.value)}
+                          value={valoresOtra[pActual.id] || ""}
+                          onChange={(e) => manejarTextoOtra(pActual.id, e.target.value)}
                           className="w-full p-3 ml-2 rounded-lg border-2 border-[#566bf6]/30 focus:border-[#566bf6] outline-none text-sm transition-all"
                           autoFocus
                         />
