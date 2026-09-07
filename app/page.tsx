@@ -233,6 +233,7 @@ export default function Home() {
     setTimeout(() => setLinkCopiado(false), 2000);
   };
 
+  // ----- DESCARGAR PDF IGUAL AL DEL DASHBOARD DE RESPUESTAS -----
   const descargarPDF = () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -257,20 +258,20 @@ export default function Home() {
     doc.setFontSize(9);
     doc.text("CPERD - Auditoría de Calidad Educativa (Proyecto de Tesis)", margenIzq, 11);
 
-    // Título Principal Actualizado
+    // Título Principal
     y = 28;
     doc.setTextColor(30, 41, 59);
     doc.setFontSize(16);
     doc.text("Informe de Encuesta CPERD", margenIzq, y);
     
-    // Fecha de Emisión
+    // Fecha de Emisión formateada como en Argentina
     y += 6;
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(100, 116, 139);
-    doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, margenIzq, y);
+    doc.text(`Fecha de emisión: ${new Date().toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}`, margenIzq, y);
     
-    // Línea separadora
+    // Línea separadora gris sutil
     y += 8;
     doc.setDrawColor(226, 232, 240);
     doc.setLineWidth(0.5);
@@ -289,6 +290,7 @@ export default function Home() {
         verificarEspacio(16);
         y += 4;
         
+        // Rectángulo de fondo para título de sección
         doc.setFillColor(241, 245, 249);
         doc.roundedRect(margenIzq, y, anchoMax, 8, 1, 1, "F");
         
@@ -296,6 +298,7 @@ export default function Home() {
         doc.setFontSize(9.5);
         doc.setTextColor(86, 107, 246);
         
+        // REEMPLAZO FLECHAS POR GUIONES PARA QUE JSPDF NO ROMPA LA FUENTE
         const tituloSeccionLimpio = seccionActual.replace(/→/g, "-").toUpperCase();
         doc.text(tituloSeccionLimpio, margenIzq + 4, y + 5.5, { align: "left" });
         y += 13;
@@ -309,6 +312,7 @@ export default function Home() {
         doc.setFontSize(9);
         doc.setTextColor(71, 85, 105);
         
+        // Rectángulo de fondo para la descripción del bloque (ej. Bloque 1: Comprensión...)
         const lineasBloque = doc.splitTextToSize(bloqueActual, anchoMax - 8);
         doc.setFillColor(248, 250, 252);
         doc.setDrawColor(226, 232, 240);
@@ -327,6 +331,7 @@ export default function Home() {
       doc.text(lineasTitulo, margenIzq, y);
       y += lineasTitulo.length * 4.5 + 1.5;
 
+      // Formatear respuesta (Array / Otra)
       let respuestaFinal = respuestaUsuario;
       if (Array.isArray(respuestaFinal)) {
         respuestaFinal = respuestaFinal.join(", ");
