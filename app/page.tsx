@@ -233,6 +233,7 @@ export default function Home() {
     setTimeout(() => setLinkCopiado(false), 2000);
   };
 
+  // ----- DESCARGAR PDF MEJORADO Y PROFESIONAL -----
   const descargarPDF = () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -248,27 +249,32 @@ export default function Home() {
       }
     };
 
+    // Header Azul Superior
     doc.setFillColor(86, 107, 246);
-    doc.rect(0, 0, pageWidth, 15, "F");
+    doc.rect(0, 0, pageWidth, 16, "F");
     
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.text("CPERD - Auditoría de Calidad Educativa (Proyecto de Tesis)", margenIzq, 10);
+    doc.setFontSize(9);
+    doc.text("CPERD - Auditoría de Calidad Educativa (Proyecto de Tesis)", margenIzq, 11);
 
-    y = 30;
+    // Título Principal Actualizado
+    y = 28;
     doc.setTextColor(30, 41, 59);
-    doc.setFontSize(18);
-    doc.text("Reporte de Respuestas de la Encuesta", margenIzq, y);
+    doc.setFontSize(16);
+    doc.text("Informe de Encuesta CPERD", margenIzq, y);
     
-    y += 8;
+    // Fecha de Emisión
+    y += 6;
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
+    doc.setFontSize(9);
     doc.setTextColor(100, 116, 139);
     doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, margenIzq, y);
     
-    y += 12;
+    // Línea separadora
+    y += 8;
     doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.5);
     doc.line(margenIzq, y, pageWidth - margenIzq, y);
     y += 10;
 
@@ -281,39 +287,48 @@ export default function Home() {
 
       if (pregunta.seccion !== seccionActual) {
         seccionActual = pregunta.seccion;
-        verificarEspacio(18);
+        verificarEspacio(16);
         y += 4;
+        
+        // Bloque de fondo para el título de la sección
+        doc.setFillColor(241, 245, 249);
+        doc.roundedRect(margenIzq, y, anchoMax, 8, 1, 1, "F");
+        
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(13);
+        doc.setFontSize(9.5);
         doc.setTextColor(86, 107, 246);
-        doc.text(seccionActual.toUpperCase(), margenIzq, y);
-        y += 8;
+        
+        // REEMPLAZO DE LA FLECHA PARA EVITAR CARACTERES RAROS EN EL PDF
+        const tituloSeccionLimpio = seccionActual.replace(/→/g, "-").toUpperCase();
+        doc.text(tituloSeccionLimpio, margenIzq + 4, y + 5.5, { align: "left" });
+        y += 13;
         bloqueActual = ""; 
       }
 
       if (pregunta.descripcion && pregunta.descripcion !== bloqueActual) {
         bloqueActual = pregunta.descripcion;
-        verificarEspacio(15);
+        verificarEspacio(12);
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(10);
+        doc.setFontSize(9);
         doc.setTextColor(71, 85, 105);
         
-        const lineasBloque = doc.splitTextToSize(bloqueActual, anchoMax - 6);
-        doc.setFillColor(241, 245, 249);
-        doc.roundedRect(margenIzq, y - 4, anchoMax, (lineasBloque.length * 5) + 6, 2, 2, "F");
+        const lineasBloque = doc.splitTextToSize(bloqueActual, anchoMax - 8);
+        doc.setFillColor(248, 250, 252);
+        doc.setDrawColor(226, 232, 240);
+        doc.roundedRect(margenIzq, y - 3, anchoMax, (lineasBloque.length * 4) + 5, 1.5, 1.5, "FD");
         
-        doc.text(lineasBloque, margenIzq + 3, y + 1);
-        y += (lineasBloque.length * 5) + 8;
+        doc.text(lineasBloque, margenIzq + 4, y + 1);
+        y += (lineasBloque.length * 4) + 7;
       }
 
-      verificarEspacio(20);
+      verificarEspacio(16);
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
+      doc.setFontSize(9.5);
       doc.setTextColor(15, 23, 42);
       
       const lineasTitulo = doc.splitTextToSize(pregunta.titulo, anchoMax);
       doc.text(lineasTitulo, margenIzq, y);
-      y += lineasTitulo.length * 5 + 2;
+      y += lineasTitulo.length * 4.5 + 1.5;
 
       let respuestaFinal = respuestaUsuario;
       if (Array.isArray(respuestaFinal)) {
@@ -327,7 +342,7 @@ export default function Home() {
       doc.setTextColor(51, 65, 85);
       const lineasRespuesta = doc.splitTextToSize(`R: ${respuestaFinal}`, anchoMax);
       doc.text(lineasRespuesta, margenIzq + 4, y);
-      y += (lineasRespuesta.length * 5) + 8;
+      y += (lineasRespuesta.length * 4.5) + 5;
     });
 
     const totalPages = doc.getNumberOfPages();
@@ -393,8 +408,9 @@ export default function Home() {
               <h2 className="text-3xl font-extrabold text-gray-800 mb-4 leading-tight">
                 ¡Muchas gracias por tomarte el tiempo de responder! 😊
               </h2>
+              {/* TEXTO CORREGIDO: SE AGREGÓ LA COMA */}
               <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                Si conocés a alguien más que haya cursado con plataformas virtuales, compartirle la encuesta me ayuda un montón para mi tesis.
+                Si conocés a alguien más que haya cursado con plataformas virtuales, compartile la encuesta, me ayuda un montón para mi tesis.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
@@ -437,72 +453,6 @@ export default function Home() {
             </>
           )}
         </motion.div>
-
-        <button
-          onClick={() => {
-            setInputPassword("");
-            setErrorPassword(false);
-            setMostrarModalAdmin(true);
-          }}
-          className="fixed bottom-6 right-6 w-12 h-12 bg-gray-900 text-white rounded-full flex items-center justify-center shadow-2xl hover:bg-gray-800 transition-all z-50 opacity-30 hover:opacity-100 focus:outline-none"
-          title="Panel de Control (Solo Admin)"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-        </button>
-
-        {mostrarModalAdmin && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl border border-gray-100">
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Acceso Restringido</h3>
-              <p className="text-sm text-gray-500 mb-6">Ingrese la contraseña de administrador:</p>
-              
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                if (inputPassword === "44321969") {
-                  setMostrarModalAdmin(false);
-                  router.push("/dashboard");
-                } else {
-                  setErrorPassword(true);
-                }
-              }}>
-                <input 
-                  type="password"
-                  autoFocus
-                  placeholder="••••••••"
-                  value={inputPassword}
-                  onChange={(e) => {
-                    setInputPassword(e.target.value);
-                    setErrorPassword(false);
-                  }}
-                  className={`w-full p-4 rounded-xl border-2 outline-none text-center text-lg tracking-widest font-bold mb-2 transition-all ${errorPassword ? "border-red-500 bg-red-50" : "border-gray-200 focus:border-[#566bf6]"}`}
-                />
-                
-                {errorPassword && (
-                  <p className="text-red-500 text-xs font-semibold mb-4 text-center">Contraseña incorrecta.</p>
-                )}
-
-                <div className="flex gap-3 mt-4">
-                  <button 
-                    type="button"
-                    onClick={() => setMostrarModalAdmin(false)}
-                    className="flex-1 py-3 rounded-xl font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
-                  >
-                    Cancelar
-                  </button>
-                  <button 
-                    type="submit"
-                    className="flex-1 py-3 rounded-xl font-bold bg-[#566bf6] hover:bg-[#4255d6] text-white shadow-lg shadow-blue-500/30 transition-all"
-                  >
-                    Ingresar
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
       </main>
     );
   }
@@ -737,7 +687,7 @@ export default function Home() {
                   {preguntas[pasoActual - 1].tipo === "textarea" && (
                     <textarea 
                       placeholder="Escribí tu respuesta aquí..."
-                      value={respuestas[preguntas[pasoActual - 1].id] || ""}
+                      value={respuestas[pasoActual - 1].id] || ""}
                       onChange={(e) => seleccionarOpcion(preguntas[pasoActual - 1].id, e.target.value)}
                       className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#566bf6] focus:ring-0 outline-none transition-all text-gray-700 font-medium resize-none h-32 custom-scrollbar"
                     />
