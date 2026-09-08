@@ -73,7 +73,7 @@ const preguntas = [
   { id: "c18", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 2: Organización del estudio.", titulo: "Pude estimar razonablemente cuánto tiempo me iba a llevar antes de empezar.", tipo: "escala", opciones: escalaValoracion },
   { id: "c19", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 2: Organización del estudio.", titulo: "El material sugería un orden o una secuencia de trabajo.", tipo: "escala", opciones: escalaValoracion },
   { id: "c20", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 2: Organización del estudio.", titulo: "La extensión real del trabajo fue bastante mayor que la anunciada.", tipo: "escala", opciones: escalaValoracion },
-  { id: "c21", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 2: Organización del estudio.", titulo: "Distribuí el estudio en varias sesiones planificadas.", tipo: "escala", opciones: escalaValoracion },
+  { id: "c21", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 2: Organización del estudio.", titulo: "El material estaba dividido de forma que podía avanzar por partes.", tipo: "escala", opciones: escalaValoracion },
 
   { id: "c22", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 3: Suficiencia del material.", titulo: "Con los materiales que dio el docente me alcanzaba para entender el tema.", tipo: "escala", opciones: escalaValoracion },
   { id: "c23", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 3: Suficiencia del material.", titulo: "Para entender el tema necesité buscar información por fuera del material.", tipo: "escala", opciones: escalaValoracion },
