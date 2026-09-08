@@ -98,11 +98,11 @@ const preguntas = [
   { id: "c39", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 5: Esfuerzo requerido.", titulo: "Las actividades propuestas ayudaron a consolidar los conceptos centrales.", tipo: "escala", opciones: escalaValoracion },
   { id: "c40", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 5: Esfuerzo requerido.", titulo: "Al terminar sentí que podía aplicar lo aprendido a situaciones nuevas.", tipo: "escala", opciones: escalaValoracion },
 
-  { id: "c41", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 6: Correspondencia con la evaluación.", titulo: "¿Esa instancia incluyó alguna evaluación calificada (examen, trabajo práctico con nota u otra)?", tipo: "radio", opciones: ["Sí", "No"] },
+  { id: "c41", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 6: Correspondencia con la evaluación.", titulo: "¿Hubo alguna instancia con nota sobre ese contenido? (un parcial, un trabajo entregable, un coloquio)", tipo: "radio", opciones: ["Sí", "No"] },
   { id: "c42", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 6: Correspondencia con la evaluación.", titulo: "La evaluación abordó los contenidos que efectivamente se trabajaron en el material.", tipo: "escala", opciones: escalaValoracion },
   { id: "c43", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 6: Correspondencia con la evaluación.", titulo: "La evaluación pidió más de lo que el material me preparaba para hacer.", tipo: "escala", opciones: escalaValoracion },
-  { id: "c44", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 6: Correspondencia con la evaluación.", titulo: "Hacer las actividades prácticas me sirvió para llegar mejor a la evaluación.", tipo: "escala", opciones: escalaValoracion },
-  { id: "c45", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 6: Correspondencia con la evaluación.", titulo: "Me sorprendió el tipo de preguntas que tenía la evaluación.", tipo: "escala", opciones: escalaValoracion },
+  { id: "c44", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 6: Correspondencia con la evaluación.", titulo: "Las actividades previas me sirvieron para llegar mejor preparado.", tipo: "escala", opciones: escalaValoracion },
+  { id: "c45", seccion: "Sección 3 - Escala de valoración", descripcion: "Bloque 6: Correspondencia con la evaluación.", titulo: "Me sorprendió el tipo de preguntas o consignas que tuve que resolver.", tipo: "escala", opciones: escalaValoracion },
 
   { id: "c46", seccion: "Sección 3 - Valoración final", descripcion: "Bloque 7: Conclusión general.", titulo: "En términos generales, considero que ese material estaba bien diseñado.", tipo: "escala", opciones: escalaValoracion },
   { id: "c47", seccion: "Sección 3 - Valoración final", descripcion: "Pregunta final de desarrollo.", titulo: "Si hubieras podido cambiar algo del material, ¿qué habrías cambiado y por qué?", tipo: "textarea" }
@@ -169,11 +169,21 @@ export default function Home() {
       return;
     }
 
+    // Filtro inicial por falta de plataformas digitales
     if (preguntaActual?.id === "c8" && respuestas["c8"] === "No, todo era papel o presencial.") {
       setEstadoFinal("temprano");
       return;
     }
 
+    // CAMINO A: Si en c10 eligió "Un examen o parcial", saltamos la c41 (pregunta de si hubo nota)
+    if (preguntaActual?.id === "c40" && respuestas["c10"] === "Un examen o parcial.") {
+      const indexDestino = preguntas.findIndex(p => p.id === "c42");
+      setDireccion(1);
+      setPasoActual(indexDestino + 1);
+      return;
+    }
+
+    // CAMINO B: Si le mostramos la c41 y contesta "No", salta al bloque 7 (c46)
     if (preguntaActual?.id === "c41" && respuestas["c41"] === "No") {
       const indexDestino = preguntas.findIndex(p => p.id === "c46");
       setDireccion(1);
@@ -189,8 +199,16 @@ export default function Home() {
     const preguntaActual = preguntas[pasoActual - 1];
     setDireccion(-1);
 
+    // Volver desde Bloque 7 al filtro de nota si vino por el CAMINO B y contestó "No"
     if (preguntaActual?.id === "c46" && respuestas["c41"] === "No") {
       const indexDestino = preguntas.findIndex(p => p.id === "c41");
+      setPasoActual(indexDestino + 1);
+      return;
+    }
+
+    // Volver desde c42 a c40 si vino por el CAMINO A (se salteó c41)
+    if (preguntaActual?.id === "c42" && respuestas["c10"] === "Un examen o parcial.") {
+      const indexDestino = preguntas.findIndex(p => p.id === "c40");
       setPasoActual(indexDestino + 1);
       return;
     }
@@ -381,6 +399,16 @@ export default function Home() {
 
   const pActual = (pasoActual > 0 && pasoActual <= preguntas.length) ? preguntas[pasoActual - 1] : null;
 
+  // Lógica para adaptar la descripción del bloque 6 dinámicamente según el Camino A o B
+  let descripcionMostrar = pActual?.descripcion;
+  if (pActual && ["c42", "c43", "c44", "c45"].includes(pActual.id)) {
+    descripcionMostrar = `Bloque 6: Correspondencia con la evaluación. ${
+      respuestas["c10"] === "Un examen o parcial." 
+        ? "Las siguientes afirmaciones se refieren al examen o trabajo práctico que mencionaste." 
+        : "Las siguientes afirmaciones se refieren a esa instancia con nota."
+    }`;
+  }
+
   // VISTA FINAL
   if (estadoFinal !== "pendiente") {
     return (
@@ -540,11 +568,11 @@ export default function Home() {
                     </div>
                   )}
                   
-                  {/* JERARQUÍA DE TÍTULOS CORREGIDA */}
-                  {pActual.descripcion ? (
+                  {/* JERARQUÍA DE TÍTULOS CORREGIDA Y ACTUALIZADA DINÁMICAMENTE */}
+                  {descripcionMostrar ? (
                     <>
                       <p className="text-sm md:text-[15px] font-medium text-gray-500 mb-3 leading-relaxed">
-                        {pActual.descripcion}
+                        {descripcionMostrar}
                       </p>
                       <div className="bg-[#f5f7ff] p-4 md:p-5 rounded-xl border border-[#e0e7ff] shadow-sm">
                         <h2 className="text-[#4255d6] text-lg md:text-xl font-extrabold leading-snug">
