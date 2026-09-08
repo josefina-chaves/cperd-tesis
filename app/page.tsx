@@ -499,10 +499,10 @@ export default function Home() {
                 <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800 mb-4 md:mb-6">¡Hola! 😊</h1>
                 <div className="text-gray-600 space-y-3 md:space-y-4 leading-relaxed text-sm md:text-[15px] overflow-y-auto pr-2 custom-scrollbar">
                   <p>Mi nombre es <span className="font-semibold text-gray-800">Josefina</span>, soy estudiante de la Licenciatura en Sistemas y me encuentro en la etapa final de mi carrera.</p>
-                  <p>Te invito a colaborar en la investigación de mi proyecto de tesis, enfocado en el desarrollo de un sistema que evalúe la calidad pedagógica de las plataformas universitarias. La propuesta consiste en implementar un panel de control impulsado por la automatización de procesos para auditar la calidad de los entornos virtuales, de modo que cada docente reciba información útil sobre sus propios materiales.</p>
-                  <p><strong className="text-gray-800">¿Quiénes pueden participar?</strong> Cualquier persona mayor de 18 años que haya cursado alguna materia con plataformas o materiales digitales, sin importar si sigue estudiando, si ya terminó o si dejó sus estudios en pausa.</p>
+                  <p>Te invito a colaborar en la investigación de mi proyecto de tesis, enfocado en el desarrollo de un sistema que evalúe la calidad pedagógica de las plataformas universitarias. La propuesta consiste en implementar un panel de control impulsado por la automatización de procesos para auditar la calidad de los entornos virtuales.</p>
+                  <p><strong className="text-gray-800">No hace falta que estés cursando ahora:</strong> podés participar si estás estudiando, si ya terminaste o si dejaste tus estudios en pausa.</p>
                   <div className="bg-[#f5f7ff] p-4 rounded-xl border border-[#e0e7ff] text-xs md:text-sm mt-2">
-                    <p className="font-semibold text-[#4255d6] mb-2">Tus respuestas son anónimas y no serán utilizadas para evaluar tu desempeño, sino exclusivamente con fines académicos. Los datos se almacenan en una base protegida a la que solo accedo yo, y se eliminarán al finalizar la investigación, en un plazo aproximado de un año y cuatro meses.</p>
+                    <p className="font-semibold text-[#4255d6] mb-1">Tus respuestas son anónimas y no serán utilizadas para evaluar tu desempeño, sino exclusivamente con fines académicos.</p>
                     <p className="text-gray-600"><strong>Tiempo estimado: 8 a 10 min.</strong></p>
                   </div>
                 </div>
@@ -531,21 +531,29 @@ export default function Home() {
                   <span className="text-[#566bf6] font-bold text-xs md:text-sm tracking-wider uppercase block mb-2 md:mb-3">
                     {pActual.seccion}
                   </span>
+
+                  {/* NUEVO RECORDATORIO DE INSTANCIA */}
+                  {parseInt(pActual.id.replace("c", "")) > 10 && respuestas["c10"] && (
+                    <div className="inline-flex items-start md:items-center gap-2 bg-indigo-50/80 border border-indigo-100 text-indigo-700 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm mb-3 md:mb-4 shadow-sm">
+                      <svg className="w-4 h-4 md:w-5 md:h-5 shrink-0 mt-0.5 md:mt-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <span className="leading-snug">Recordá responder pensando en: <strong className="font-extrabold">{respuestas["c10"] === "Otra" ? (valoresOtra["c10"] || "la instancia elegida") : respuestas["c10"]}</strong></span>
+                    </div>
+                  )}
                   
                   {pActual.descripcion ? (
                     <>
-                      <h2 className="text-lg md:text-xl font-semibold text-gray-800 leading-snug mb-3">
-                        {pActual.titulo}
+                      <h2 className="text-xl md:text-2xl font-bold text-gray-800 leading-snug mb-3 md:mb-4">
+                        {pActual.descripcion}
                       </h2>
-                      <div className="bg-[#f5f7ff] p-3 md:p-4 rounded-xl border border-[#e0e7ff] mb-2 md:mb-4">
-                        <p className="text-[#4255d6] text-sm md:text-[15px] font-medium leading-relaxed">
-                          {pActual.descripcion}
+                      <div className="bg-[#f5f7ff] p-3 md:p-4 rounded-xl border border-[#e0e7ff]">
+                        <p className="text-[#4255d6] text-sm md:text-[16px] font-semibold leading-relaxed">
+                          {pActual.titulo}
                         </p>
                       </div>
                     </>
                   ) : (
                     <>
-                      <h2 className="text-lg md:text-xl font-semibold text-gray-800 leading-snug mb-4">
+                      <h2 className="text-xl md:text-2xl font-bold text-gray-800 leading-snug">
                         {pActual.titulo}
                       </h2>
                     </>
