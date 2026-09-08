@@ -534,18 +534,18 @@ export default function Home() {
                   
                   {pActual.descripcion ? (
                     <>
-                      <h2 className="text-xl md:text-2xl font-bold text-gray-800 leading-snug mb-3 md:mb-4">
-                        {pActual.descripcion}
-                      </h2>
-                      <div className="bg-[#f5f7ff] p-3 md:p-4 rounded-xl border border-[#e0e7ff]">
-                        <p className="text-[#4255d6] text-sm md:text-[16px] font-semibold leading-relaxed">
-                          {pActual.titulo}
+                      <div className="bg-[#f5f7ff] p-3 md:p-4 rounded-xl border border-[#e0e7ff] mb-3 md:mb-4">
+                        <p className="text-[#4255d6] text-sm md:text-[15px] font-medium leading-relaxed">
+                          {pActual.descripcion}
                         </p>
                       </div>
+                      <h2 className="text-xl md:text-2xl font-bold text-gray-800 leading-snug mb-4">
+                        {pActual.titulo}
+                      </h2>
                     </>
                   ) : (
                     <>
-                      <h2 className="text-xl md:text-2xl font-bold text-gray-800 leading-snug">
+                      <h2 className="text-xl md:text-2xl font-bold text-gray-800 leading-snug mb-4">
                         {pActual.titulo}
                       </h2>
                     </>
