@@ -499,10 +499,10 @@ export default function Home() {
                 <h1 className="text-2xl md:text-3xl font-extrabold text-gray-800 mb-4 md:mb-6">¡Hola! 😊</h1>
                 <div className="text-gray-600 space-y-3 md:space-y-4 leading-relaxed text-sm md:text-[15px] overflow-y-auto pr-2 custom-scrollbar">
                   <p>Mi nombre es <span className="font-semibold text-gray-800">Josefina</span>, soy estudiante de la Licenciatura en Sistemas y me encuentro en la etapa final de mi carrera.</p>
-                  <p>Te invito a colaborar en la investigación de mi proyecto de tesis, enfocado en el desarrollo de un sistema que evalúe la calidad pedagógica de las plataformas universitarias. La propuesta consiste en implementar un panel de control impulsado por la automatización de procesos para auditar la calidad de los entornos virtuales.</p>
-                  <p><strong className="text-gray-800">No hace falta que estés cursando ahora:</strong> podés participar si estás estudiando, si ya terminaste o si dejaste tus estudios en pausa.</p>
+                  <p>Te invito a colaborar en la investigación de mi proyecto de tesis, enfocado en el desarrollo de un sistema que evalúe la calidad pedagógica de las plataformas universitarias. La propuesta consiste en implementar un panel de control impulsado por la automatización de procesos para auditar la calidad de los entornos virtuales, de modo que cada docente reciba información útil sobre sus propios materiales.</p>
+                  <p><strong className="text-gray-800">¿Quiénes pueden participar?</strong> Cualquier persona mayor de 18 años que haya cursado alguna materia con plataformas o materiales digitales, sin importar si sigue estudiando, si ya terminó o si dejó sus estudios en pausa.</p>
                   <div className="bg-[#f5f7ff] p-4 rounded-xl border border-[#e0e7ff] text-xs md:text-sm mt-2">
-                    <p className="font-semibold text-[#4255d6] mb-1">Tus respuestas son anónimas y no serán utilizadas para evaluar tu desempeño, sino exclusivamente con fines académicos.</p>
+                    <p className="font-semibold text-[#4255d6] mb-2">Tus respuestas son anónimas y no serán utilizadas para evaluar tu desempeño, sino exclusivamente con fines académicos. Los datos se almacenan en una base protegida a la que solo accedo yo, y se eliminarán al finalizar la investigación, en un plazo aproximado de un año y cuatro meses.</p>
                     <p className="text-gray-600"><strong>Tiempo estimado: 8 a 10 min.</strong></p>
                   </div>
                 </div>
