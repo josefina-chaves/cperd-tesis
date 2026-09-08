@@ -535,20 +535,21 @@ export default function Home() {
                   {/* NUEVO RECORDATORIO DE INSTANCIA */}
                   {parseInt(pActual.id.replace("c", "")) > 10 && respuestas["c10"] && (
                     <div className="inline-flex items-start md:items-center gap-2 bg-indigo-50/80 border border-indigo-100 text-indigo-700 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm mb-3 md:mb-4 shadow-sm">
-                      <svg className="w-4 h-4 md:w-5 md:h-5 shrink-0 mt-0.5 md:mt-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <svg className="w-4 h-4 md:w-5 md:h-5 shrink-0 mt-0.5 md:mt-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                       <span className="leading-snug">Recordá responder pensando en: <strong className="font-extrabold">{respuestas["c10"] === "Otra" ? (valoresOtra["c10"] || "la instancia elegida") : respuestas["c10"]}</strong></span>
                     </div>
                   )}
                   
+                  {/* JERARQUÍA DE TÍTULOS CORREGIDA */}
                   {pActual.descripcion ? (
                     <>
-                      <h2 className="text-xl md:text-2xl font-bold text-gray-800 leading-snug mb-3 md:mb-4">
+                      <p className="text-sm md:text-[15px] font-medium text-gray-500 mb-3 leading-relaxed">
                         {pActual.descripcion}
-                      </h2>
-                      <div className="bg-[#f5f7ff] p-3 md:p-4 rounded-xl border border-[#e0e7ff]">
-                        <p className="text-[#4255d6] text-sm md:text-[16px] font-semibold leading-relaxed">
+                      </p>
+                      <div className="bg-[#f5f7ff] p-4 md:p-5 rounded-xl border border-[#e0e7ff] shadow-sm">
+                        <h2 className="text-[#4255d6] text-lg md:text-xl font-extrabold leading-snug">
                           {pActual.titulo}
-                        </p>
+                        </h2>
                       </div>
                     </>
                   ) : (
