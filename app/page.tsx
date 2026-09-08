@@ -169,21 +169,31 @@ export default function Home() {
       return;
     }
 
-    // Filtro inicial por falta de plataformas digitales
     if (preguntaActual?.id === "c8" && respuestas["c8"] === "No, todo era papel o presencial.") {
       setEstadoFinal("temprano");
       return;
     }
 
-    // CAMINO A: Si en c10 eligió "Un examen o parcial", saltamos la c41 (pregunta de si hubo nota)
-    if (preguntaActual?.id === "c40" && respuestas["c10"] === "Un examen o parcial.") {
-      const indexDestino = preguntas.findIndex(p => p.id === "c42");
-      setDireccion(1);
-      setPasoActual(indexDestino + 1);
-      return;
+    // Evaluamos si el usuario necesita pasar por la pregunta de filtro c41
+    const necesitaFiltro = respuestas["c10"] !== "Un examen o parcial.";
+
+    // LÓGICA DE SALTO DE IDA
+    if (preguntaActual?.id === "c40") {
+      if (necesitaFiltro) {
+        // CAMINO B: Muestra el filtro
+        setDireccion(1);
+        setPasoActual(prev => prev + 1);
+        return;
+      } else {
+        // CAMINO A: Saltea el filtro directo a la c42
+        const indexDestino = preguntas.findIndex(p => p.id === "c42");
+        setDireccion(1);
+        setPasoActual(indexDestino + 1);
+        return;
+      }
     }
 
-    // CAMINO B: Si le mostramos la c41 y contesta "No", salta al bloque 7 (c46)
+    // CAMINO B: Si en la pregunta de filtro contestó que No, lo mandamos al Bloque 7
     if (preguntaActual?.id === "c41" && respuestas["c41"] === "No") {
       const indexDestino = preguntas.findIndex(p => p.id === "c46");
       setDireccion(1);
@@ -199,15 +209,18 @@ export default function Home() {
     const preguntaActual = preguntas[pasoActual - 1];
     setDireccion(-1);
 
-    // Volver desde Bloque 7 al filtro de nota si vino por el CAMINO B y contestó "No"
-    if (preguntaActual?.id === "c46" && respuestas["c41"] === "No") {
+    const necesitaFiltro = respuestas["c10"] !== "Un examen o parcial.";
+
+    // LÓGICA DE SALTO DE VUELTA
+    // Si está en el Bloque 7 y viene del Camino B (donde contestó "No" al filtro), vuelve a la pregunta filtro.
+    if (preguntaActual?.id === "c46" && necesitaFiltro && respuestas["c41"] === "No") {
       const indexDestino = preguntas.findIndex(p => p.id === "c41");
       setPasoActual(indexDestino + 1);
       return;
     }
 
-    // Volver desde c42 a c40 si vino por el CAMINO A (se salteó c41)
-    if (preguntaActual?.id === "c42" && respuestas["c10"] === "Un examen o parcial.") {
+    // Si está en la primera pregunta de evaluación (c42) y viene del Camino A, vuelve a c40 saltando el filtro
+    if (preguntaActual?.id === "c42" && !necesitaFiltro) {
       const indexDestino = preguntas.findIndex(p => p.id === "c40");
       setPasoActual(indexDestino + 1);
       return;
@@ -402,8 +415,9 @@ export default function Home() {
   // Lógica para adaptar la descripción del bloque 6 dinámicamente según el Camino A o B
   let descripcionMostrar = pActual?.descripcion;
   if (pActual && ["c42", "c43", "c44", "c45"].includes(pActual.id)) {
+    const necesitaFiltro = respuestas["c10"] !== "Un examen o parcial.";
     descripcionMostrar = `Bloque 6: Correspondencia con la evaluación. ${
-      respuestas["c10"] === "Un examen o parcial." 
+      !necesitaFiltro
         ? "Las siguientes afirmaciones se refieren al examen o trabajo práctico que mencionaste." 
         : "Las siguientes afirmaciones se refieren a esa instancia con nota."
     }`;
@@ -568,7 +582,7 @@ export default function Home() {
                     </div>
                   )}
                   
-                  {/* JERARQUÍA DE TÍTULOS CORREGIDA Y ACTUALIZADA DINÁMICAMENTE */}
+                  {/* JERARQUÍA DE TÍTULOS DINÁMICA */}
                   {descripcionMostrar ? (
                     <>
                       <p className="text-sm md:text-[15px] font-medium text-gray-500 mb-3 leading-relaxed">
