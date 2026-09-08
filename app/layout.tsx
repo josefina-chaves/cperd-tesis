@@ -22,7 +22,7 @@ export default function RootLayout({
   );
 }
 export const metadata = {
-  title: "CPERD | Encuesta Institucional", 
+  title: "CPERD | Investigación de tesis", 
   description: "Sistema de Auditoría de Calidad Educativa",
   // Esta es la línea clave que tenés que agregar:
   icons: {
